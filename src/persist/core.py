@@ -68,3 +68,4 @@ def save_exit(state):
     save_product_data(state)
     save_courier_data(state)
     exit()
+    #"python.linting.pylintPath": "venv/bin/pylint"
