@@ -19,7 +19,7 @@ connection = pymysql.connect(
 )
 
 def connection():
-    return pymysql.connect(host=HOST, password=PASSWORD, user=USER, port=PORT, password=PASSWORD, db=DB)
+    return pymysql.connect(host=HOST, user=USER, port=PORT, password=PASSWORD, db=DB)
 
 def query(conn, sql):
     with conn.cursor() as cursor:
