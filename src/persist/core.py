@@ -1,23 +1,41 @@
 import csv
+from db.core import query, connection
 
-def fetch_product_data(filename="data/products.csv"):
-    try:
-        products_data = []
-        with open(filename,"r") as file:
-            csvfile = csv.DictReader(file)
-            for item in csvfile:
-                products_data.append(item)
-            return products_data
-    except FileNotFoundError:
-        print("File does not exist")  
+
+select_all_products = "SELECT * FROM product"
+select_all_couriers = "SELECT * FROM courier"
+
+conn = connection()
+
+products = query(conn, select_all_products)
+couriers = query(conn, select_all_couriers)
+
+
+def fetch_product_data(conn, sql):
+    return query(conn, select_all_products)
+
+def fetch_courier_data(conn, sql):
+    return query(conn, select_all_couriers)
+
+# def fetch_product_data(filename="data/products.csv"):
+    # try:
+    #     products_data = []
+    #     with open(filename,"r") as file:
+    #         csvfile = csv.DictReader(file)
+    #         for item in csvfile:
+    #             products_data.append(item)
+    #         return products_data
+    # except FileNotFoundError:
+    #     print("File does not exist")  
+    
         
-def fetch_courier_data(filename="data/couriers.csv"):
-    try:
-        couriers_data = []
-        couriers_file = open(filename,"r")
-        return couriers_file.read().split()
-    except FileNotFoundError:
-        print("File does not exist")
+# def fetch_courier_data(filename="data/couriers.csv"):
+#     try:
+#         couriers_data = []
+#         couriers_file = open(filename,"r")
+#         return couriers_file.read().split()
+#     except FileNotFoundError:
+#         print("File does not exist")
     
 def fetch_orders_data(filename="data/orders.csv"):
     try:
@@ -46,7 +64,7 @@ def save_courier_data(state,filename:str="data/couriers.csv"):
     couriers_file = open(filename,"w")
     if state["courier"]:
         for item in state["courier"]:
-            couriers_file.writelines(item+"\n")
+            couriers_file.writelines(item)
     else:
         couriers_file.writelines("")
         
@@ -68,4 +86,6 @@ def save_exit(state):
     save_product_data(state)
     save_courier_data(state)
     exit()
-    #"python.linting.pylintPath": "venv/bin/pylint"
+    
+    
+#"python.linting.pylintPath": "venv/bin/pylint"

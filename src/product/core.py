@@ -1,4 +1,9 @@
 from os import system
+from db.core import update, connection
+
+insert_new_product = "INSERT INTO product (name,price) VALUES ('orange',2)"
+conn = connection()
+
 
 def product_menu(state):
     print(
@@ -31,29 +36,30 @@ Select from the following options:
     except:
         print("Invalid input, please try again")
         product_menu(state)
-        
-        
+
 def show_products(state):
     # system("clear")
     for item in state["product"]:
-        print(f"Item: {item['item']},   Price: {item['price']}")
+        print(f"Item: {item['name']}      \tPrice: £{item['price']}")
     print("\n")
     
 def add_product(state):
     item = input("enter the item name ").strip().lower().title()
     price = float(input("enter the price of the item "))
     product = {"item":item,"price":price}
-    state["product"].append(product)
+    # state["product"].append(product)
+    # update(conn, insert_new_product)
+    update(conn, f"INSERT INTO product (name,price) VALUES ('{item}',{price})")
     
 def update_product(state):
     for count, item in enumerate(state["product"]):
-        print(count,f"Item: {item['item']},   Price: {item['price']}")
+        print(count,f"Item: {item['name']},   Price: {item['price']}")
     index = int(input("type index to update "))
-    state["product"][index]["item"] = input("update product ").strip().lower().title()
+    state["product"][index]["name"] = input("update product ").strip().lower().title()
     state["product"][index]["price"] = float(input("update price "))
     
 def delete_product(state):
     for count, item in enumerate(state["product"],1):
-        print(count,f"Item: {item['item']},   Price: {item['price']}")
+        print(count,f"Item: {item['name']},   Price: {item['price']}")
     index = int(input("type index to delete "))
     state["product"].remove(state["product"][index-1])
