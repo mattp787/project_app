@@ -1,5 +1,6 @@
+from db.core import update, connection
 
-
+conn = connection()
 def courier_menu(state):
     print(
 """
@@ -35,19 +36,32 @@ def show_couriers(state):
     print(state["courier"])
 
 def add_courier(state):
-    (state["courier"]).append(input("Enter a new courier: "))
-
+    new_name = input("Enter a new courier: ")
+    availability = input("Enter the availability: ")
+    (state["courier"]).append(new_name)
+    update(conn, f"INSERT INTO courier (name, available) VALUES ('{new_name}','{availability}')")
+    
 def delete_courier(state):
     for item,count in enumerate(state["courier"],1):
         print(f"{item} : {count}")
     sel = int(input("Enter an index to delete, or 0 to cancel: "))
+    to_delete = state["courier"][sel-1]["name"]
+    print(to_delete)
     if sel != 0:
         state["courier"].pop(sel-1)
+        update(conn, f"DELETE FROM courier WHERE (name = '{to_delete}')")
         
 def update_courier(state):
     for count, item in enumerate(state["courier"],1):
         print(count,item)
     index = int(input("Type index to update, or enter 0 to cancel "))
+    to_update = state["courier"][index-1]["name"]
+    # print(state["courier"][index-1]["availabile"])
+    # availability = state["courier"][index-1]["availabile"]
+    new_name = str(input("Type new courier: "))
+    print(new_name)
+    print(to_update)
     if index != 0:
-        state["courier"][index-1] = str(input("Type new courier: "))
+        state["courier"][index-1] = new_name
+        update(conn, f"UPDATE courier SET name = '{new_name}' WHERE (name = '{to_update}')")
     

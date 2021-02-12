@@ -47,19 +47,25 @@ def add_product(state):
     item = input("enter the item name ").strip().lower().title()
     price = float(input("enter the price of the item "))
     product = {"item":item,"price":price}
-    # state["product"].append(product)
-    # update(conn, insert_new_product)
+    state["product"].append(product)
     update(conn, f"INSERT INTO product (name,price) VALUES ('{item}',{price})")
     
 def update_product(state):
-    for count, item in enumerate(state["product"]):
+    for count, item in enumerate(state["product"],1):
         print(count,f"Item: {item['name']},   Price: {item['price']}")
-    index = int(input("type index to update "))
-    state["product"][index]["name"] = input("update product ").strip().lower().title()
-    state["product"][index]["price"] = float(input("update price "))
+    index = int(input("type index to update "))-1
+    new_name = input("update product ").strip().lower().title()
+    new_price = float(input("update price "))
+    old_name = state["product"][index]["name"]
+    update(conn, f"UPDATE product SET name = '{new_name}', price = {new_price} WHERE name = '{old_name}'")
+    state["product"][index]["name"] = new_name
+    state["product"][index]["price"] = new_price
+    
     
 def delete_product(state):
     for count, item in enumerate(state["product"],1):
         print(count,f"Item: {item['name']},   Price: {item['price']}")
-    index = int(input("type index to delete "))
-    state["product"].remove(state["product"][index-1])
+    index = int(input("type index to delete "))-1
+    to_delete = state["product"][index]["name"]
+    update(conn, f"DELETE FROM product WHERE name = '{to_delete}'")
+    state["product"].remove(state["product"][index])
