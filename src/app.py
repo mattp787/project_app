@@ -1,5 +1,5 @@
 import csv
-
+import uuid
 from src.product.core import product_menu, show_products, add_product, delete_product
 from src.courier.core import courier_menu, show_couriers, add_courier, delete_courier
 from src.order.core import orders_menu, show_orders, add_order, delete_order
@@ -62,7 +62,7 @@ Select from the following options:
         choice = int(input("\nEnter a selection\n")) - 1
     except:
         print("Invalid input, please try again")
-        main_menu()
+        main_menu(state)
 
     if choice == 0:
         save_exit(state)
@@ -86,6 +86,11 @@ Select from the following options:
 state["product"] = fetch_product_data(conn,select_all_products)
 state["courier"] = fetch_courier_data(conn,select_all_couriers)
 state["order"]= fetch_orders_data()
+
+print(uuid.uuid4())
+# print(query(conn,"SELECT id FROM product WHERE name = 'test3'")[0]["id"])
+# print([(x["id"], x["name"]) for x in query(conn,"SELECT * FROM product")])
+
 
 while True:
     main_menu(state)

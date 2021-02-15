@@ -1,4 +1,7 @@
+from db.core import update, connection, query
+import uuid
 
+conn = connection()
 
 def orders_menu(state):
     print(
@@ -60,7 +63,7 @@ Select from the following options:
         orders_menu(state)
     
 def show_orders(state):
-    state = parse_state(state)
+    # state = parse_state(state)
     for idx in range(len(state["order"])):
         print(f"""
 customer : {state["order"][idx]["customer"]}
@@ -78,12 +81,13 @@ def add_order(state):
     customer = input("enter the name of the customer ").strip()
     address = input("enter the address ").strip()
     phone_number = input("enter the phone number ").strip()
+    ##### THIS IS FOR CACHED DATA
     products = []
     sel = 1
     while sel != "0":
         for item, count in enumerate(state["product"]):
             print(item, count)
-        products.append(state["product"][int(input("select an index to add a product: "))].get("item"))
+        products.append(state["product"][int(input("select an index to add a product: "))].get("name"))
         sel = input(("Press enter to add more products, press 0 to finish adding products ")).strip()
         
     for item, count in enumerate(state["courier"]):
@@ -91,6 +95,21 @@ def add_order(state):
     courier = state["courier"][int(input("select an index for the courier: "))]
     order = {"customer":customer,"address":address,"phone number":phone_number,"courier":courier,"products":products,"order status":"preparing"}
     state["order"].append(order)
+    ######
+    courier_name = courier["name"]
+    courier_id = query(conn,f"SELECT id FROM courier WHERE name = '{courier_name}'")[0]["id"]
+    print(products)
+    for product in products:
+        identifier = uuid.uuid4()
+        # print(product)
+        product_id = query(conn,f"SELECT id FROM product WHERE name = '{product}'")[0]["id"]
+        
+        # print(f"INSERT INTO transaction (id, customer_name, customer_address, customer_phone, courier) VALUES ('{identifier}', '{customer}', '{address}', '{phone_number}', {courier_id});")
+        # print(f"INSERT INTO basket (transaction_id, product) VALUES ('{identifier}', '{product_id}');")
+        update(conn, f"INSERT INTO transaction (id, customer_name, customer_address, customer_phone, courier) VALUES ('{identifier}', '{customer}', '{address}', '{phone_number}', {courier_id});")
+        # [x["name"] for x in state["product"]]
+        update(conn, f"INSERT INTO basket (transaction_id, product) VALUES ('{identifier}', '{product_id}');")
+    
     
 def update_order_status(state):
     for idx, order in enumerate(state["order"],1):

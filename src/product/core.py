@@ -33,22 +33,23 @@ Select from the following options:
         elif choice == 4:
             delete_product(state)
             product_menu(state)
-    except:
+    except Exception as e:
+        input(f"ERROR: {e}")
         print("Invalid input, please try again")
         product_menu(state)
 
 def show_products(state):
     # system("clear")
     for item in state["product"]:
-        print(f"Item: {item['name']}      \tPrice: £{item['price']}")
+        print(f"Item: {item['name']}      \tPrice: £{item['price']};")
     print("\n")
     
 def add_product(state):
     item = input("enter the item name ").strip().lower().title()
     price = float(input("enter the price of the item "))
-    product = {"item":item,"price":price}
+    product = {"name":item,"price":price}
     state["product"].append(product)
-    update(conn, f"INSERT INTO product (name,price) VALUES ('{item}',{price})")
+    update(conn, f"INSERT INTO product (name,price) VALUES ('{name}',{price});")
     
 def update_product(state):
     for count, item in enumerate(state["product"],1):
