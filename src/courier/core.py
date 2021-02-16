@@ -12,63 +12,67 @@ Select from the following options:
 [5] to delete courier
 """
     )
-    try:
-        choice = int(input("\nEnter a selection\n")) - 1
-        if choice == 0:
-            pass
-        elif choice == 1:
-            show_couriers(state)
-            courier_menu(state)
-        elif choice == 2:
-            add_courier(state)
-            courier_menu(state)
-        elif choice == 3:
-            update_courier(state)
-            courier_menu(state)
-        elif choice == 4:
-            delete_courier(state)
-            courier_menu(state)
-    except:
-        print("Invalid input, please try again")
+
+    choice = int(input("\nEnter a selection\n")) - 1
+    if choice == 0:
+        pass
+    elif choice == 1:
+        show_couriers(state)
         courier_menu(state)
+    elif choice == 2:
+        try:
+            add_courier(state)  
+        except:
+            print("Failed to add courier")
+        courier_menu(state)
+    elif choice == 3:
+        try:
+            update_courier(state, select_courier)
+        except:
+            print("Failed to update courier")
+        courier_menu(state)
+    elif choice == 4:
+        try:
+            delete_courier(state, select_courier)
+        except:
+            print("Failed to delete courier")
+        courier_menu(state)
+    
+        
 
 def show_couriers(state):
-    print(state["courier"])
+    for x in range(len(state["courier"])):
+        print(
+            f"""Name: {state["courier"][x]["name"]} \t Available: {state["courier"][x]["available"]}""")
 
 def add_courier(state):
-    try:
-        print(state["courier"])
-        new_name = input("Enter a new courier: ").strip().lower().title()
-        availability = input("Enter the availability: ").strip().lower().title()
-        courier = {"name":new_name, "available":availability}
-        state["courier"].append(courier)
-        update(conn, f"INSERT INTO courier (name, available) VALUES ('{new_name}','{availability}')")
-    except Exception as e:
-        input(f"{e}")
+    print(state["courier"])
+    new_name = input("Enter a new courier: ").strip().lower().title()
+    availability = input("Enter the availability: ").strip().lower().title()
+    courier = {"name":new_name, "available":availability}
+    state["courier"].append(courier)
+    update(conn, f"INSERT INTO courier (name, available) VALUES ('{new_name}','{availability}')")
+
     
-def delete_courier(state):
+def select_courier(state):
     for item,count in enumerate(state["courier"],1):
         print(f"{item} : {count}")
-    sel = int(input("Enter an index to delete, or 0 to cancel: "))
+    index = int(input("Enter an index or 0 to cancel: "))
+    return index
+    
+def delete_courier(state, select_courier):
+    sel = select_courier(state)
     to_delete = state["courier"][sel-1]["name"]
-    print(to_delete)
     if sel != 0:
         state["courier"].pop(sel-1)
         update(conn, f"DELETE FROM courier WHERE (name = '{to_delete}')")
         
-def update_courier(state):
-    for count, item in enumerate(state["courier"],1):
-        print(count,item)
-    index = int(input("Type index to update, or enter 0 to cancel "))
+def update_courier(state, select_courier):
+    index = select_courier(state)
     if index != 0:
         to_update = state["courier"][index-1]["name"]
-        print(to_update)
         new_name = str(input("Type new courier: "))
         new_availability = str(input("Type availability: "))
         state["courier"][index-1] = {"name":new_name, "available":new_availability}
         update(conn, f"UPDATE courier SET name = '{new_name}', available = '{new_availability}' WHERE (name = '{to_update}')")
     
-
-#GET INPUT
-#ADD TO STATE
-#ADD TO DATABASE 

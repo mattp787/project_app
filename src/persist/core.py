@@ -56,15 +56,17 @@ def save_product_data(state,filename:str="data/products.csv"):
         writer.writeheader()
         for item in state["product"]:
             writer.writerow({"item":item.get("item"),"price":item.get("price")})
-            print(item)
     else:
         products_file.writelines("")
         
 def save_courier_data(state,filename:str="data/couriers.csv"):
     couriers_file = open(filename,"w")
     if state["courier"]:
+        fieldnames = ["name","available"]
+        writer = csv.DictWriter(couriers_file, fieldnames=fieldnames)
+        writer.writeheader()
         for item in state["courier"]:
-            couriers_file.writelines(item)
+            writer.writerow({"name":item.get("name"),"available":item.get("available")})
     else:
         couriers_file.writelines("")
         

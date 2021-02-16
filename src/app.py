@@ -1,6 +1,7 @@
 import csv
 import uuid
-from src.product.core import product_menu, show_products, add_product, delete_product
+# from src.product.core import product_menu, show_products, add_product, delete_product
+from src.product.core import product_menu, show_products, delete_product, get_new_product, add_product_db, add_product_cache
 from src.courier.core import courier_menu, show_couriers, add_courier, delete_courier
 from src.order.core import orders_menu, show_orders, add_order, delete_order
 from src.persist.core import fetch_courier_data,fetch_orders_data,fetch_product_data,save_courier_data,save_orders_data,save_product_data,save_exit
@@ -20,31 +21,6 @@ conn = connection()
 
 select_all_products = "SELECT * FROM product"
 select_all_couriers = "SELECT * FROM courier"
-
-
-
-# products = list(query(conn, select_all_products))
-# couriers = list(query(conn, select_all_couriers))
-# for product in products:
-#     print(product)
-    
-# for courier in couriers:
-#     print(courier)
-
-
-
-# def parse_datum(datum):
-    
-
-# def parse_data(data):
-#     c = []
-#     for datum in data:
-#         parsed = parse_datum(datum)
-#         c.append(parsed)
-#     return c
-
-
-
 
 
 def main_menu(state):
@@ -76,6 +52,9 @@ Select from the following options:
         print("Invalid input, please try again")
         main_menu(state)   
 
+
+
+
 # main_menu(state)
 # add_courier(state)
 # add_courier(state)
@@ -85,7 +64,7 @@ Select from the following options:
 
 state["product"] = list(fetch_product_data(conn,select_all_products))
 state["courier"] = list(fetch_courier_data(conn,select_all_couriers))
-state["order"]= list(fetch_orders_data())
+state["order"] = list(fetch_orders_data())
 
 print(uuid.uuid4())
 # print(query(conn,"SELECT id FROM product WHERE name = 'test3'")[0]["id"])
