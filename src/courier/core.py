@@ -36,10 +36,15 @@ def show_couriers(state):
     print(state["courier"])
 
 def add_courier(state):
-    new_name = input("Enter a new courier: ")
-    availability = input("Enter the availability: ")
-    (state["courier"]).append(new_name)
-    update(conn, f"INSERT INTO courier (name, available) VALUES ('{new_name}','{availability}')")
+    try:
+        print(state["courier"])
+        new_name = input("Enter a new courier: ").strip().lower().title()
+        availability = input("Enter the availability: ").strip().lower().title()
+        courier = {"name":new_name, "available":availability}
+        state["courier"].append(courier)
+        update(conn, f"INSERT INTO courier (name, available) VALUES ('{new_name}','{availability}')")
+    except Exception as e:
+        input(f"{e}")
     
 def delete_courier(state):
     for item,count in enumerate(state["courier"],1):
@@ -55,13 +60,15 @@ def update_courier(state):
     for count, item in enumerate(state["courier"],1):
         print(count,item)
     index = int(input("Type index to update, or enter 0 to cancel "))
-    to_update = state["courier"][index-1]["name"]
-    # print(state["courier"][index-1]["availabile"])
-    # availability = state["courier"][index-1]["availabile"]
-    new_name = str(input("Type new courier: "))
-    print(new_name)
-    print(to_update)
     if index != 0:
-        state["courier"][index-1] = new_name
-        update(conn, f"UPDATE courier SET name = '{new_name}' WHERE (name = '{to_update}')")
+        to_update = state["courier"][index-1]["name"]
+        print(to_update)
+        new_name = str(input("Type new courier: "))
+        new_availability = str(input("Type availability: "))
+        state["courier"][index-1] = {"name":new_name, "available":new_availability}
+        update(conn, f"UPDATE courier SET name = '{new_name}', available = '{new_availability}' WHERE (name = '{to_update}')")
     
+
+#GET INPUT
+#ADD TO STATE
+#ADD TO DATABASE 

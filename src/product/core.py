@@ -47,9 +47,9 @@ def show_products(state):
 def add_product(state):
     item = input("enter the item name ").strip().lower().title()
     price = float(input("enter the price of the item "))
-    product = {"name":item,"price":price}
+    product = {'name':item,"price":price}
     state["product"].append(product)
-    update(conn, f"INSERT INTO product (name,price) VALUES ('{name}',{price});")
+    update(conn, f"INSERT INTO product (name,price) VALUES ('{item}',{price});")
     
 def update_product(state):
     for count, item in enumerate(state["product"],1):

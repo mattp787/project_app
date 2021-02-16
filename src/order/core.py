@@ -136,13 +136,13 @@ def update_order(state):
     while sel != "0":
         for item, count in enumerate(state["product"]):
             print(item, count)
-        products.append(state["product"][int(input("select an index to add a product: "))].get("item"))
+        products.append(state["product"][int(input("select an index to add a product: "))].get("name"))
         sel = input(("Press enter to add more products, press 0 to finish adding products ")).strip()
     #####
     for item, count in enumerate(state["courier"]):
         print(item, count)
     courier = str(state["courier"][int(input("select an index for the courier: "))])
-    order = {"customer":customer,"address":address,"phone number":phone_number,"product":products,"courier":courier,"order status":"preparing"}
+    order = {"customer":customer,"address":address,"phone number":phone_number,"products":products,"courier":courier,"order status":"preparing"}
     state["order"][idx] = order
     
 def delete_order(state):

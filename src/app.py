@@ -23,13 +23,13 @@ select_all_couriers = "SELECT * FROM courier"
 
 
 
-products = query(conn, select_all_products)
-couriers = query(conn, select_all_couriers)
-for product in products:
-    print(product)
+# products = list(query(conn, select_all_products))
+# couriers = list(query(conn, select_all_couriers))
+# for product in products:
+#     print(product)
     
-for courier in couriers:
-    print(couriers)
+# for courier in couriers:
+#     print(courier)
 
 
 
@@ -83,9 +83,9 @@ Select from the following options:
 # delete_courier(state)
 # show_couriers(state)
 
-state["product"] = fetch_product_data(conn,select_all_products)
-state["courier"] = fetch_courier_data(conn,select_all_couriers)
-state["order"]= fetch_orders_data()
+state["product"] = list(fetch_product_data(conn,select_all_products))
+state["courier"] = list(fetch_courier_data(conn,select_all_couriers))
+state["order"]= list(fetch_orders_data())
 
 print(uuid.uuid4())
 # print(query(conn,"SELECT id FROM product WHERE name = 'test3'")[0]["id"])
