@@ -4,11 +4,11 @@ from db.core import query, connection
 
 select_all_products = "SELECT * FROM product"
 select_all_couriers = "SELECT * FROM courier"
+select_all_orders = "SELECT transaction_id as id, customer_name as customer, customer_address as address, customer_phone as phone, courier, product FROM transaction INNER JOIN basket ON transaction.id = basket.transaction_id;"
 
 conn = connection()
 
-products = query(conn, select_all_products)
-couriers = query(conn, select_all_couriers)
+
 
 
 def fetch_product_data(conn, sql):
@@ -16,6 +16,9 @@ def fetch_product_data(conn, sql):
 
 def fetch_courier_data(conn, sql):
     return query(conn, select_all_couriers)
+
+def fetch_order_data(conn, sql):
+    return query(conn, select_all_orders)
 
 # def fetch_product_data(filename="data/products.csv"):
     # try:
@@ -37,16 +40,18 @@ def fetch_courier_data(conn, sql):
 #     except FileNotFoundError:
 #         print("File does not exist")
     
-def fetch_orders_data(filename="data/orders.csv"):
-    try:
-        orders_data = []
-        with open(filename,"r") as file:
-            csvfile = csv.DictReader(file)
-            for item in csvfile:
-                orders_data.append(item)
-            return orders_data
-    except FileNotFoundError:
-        print("File does not exist")   
+# def fetch_orders_data(filename="data/orders.csv"):
+#     try:
+#         orders_data = []
+#         with open(filename,"r") as file:
+#             csvfile = csv.DictReader(file)
+#             for item in csvfile:
+#                 orders_data.append(item)
+#             return orders_data
+#     except FileNotFoundError:
+#         print("File does not exist")   
+        
+
         
 def save_product_data(state,filename:str="data/products.csv"):
     products_file = open(filename,"w")

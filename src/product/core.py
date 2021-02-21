@@ -1,60 +1,69 @@
 from os import system
-from db.core import update, connection
+from db.core import update, connection, query
+from tabulate import tabulate
 
-insert_new_product = "INSERT INTO product (name,price) VALUES ('orange',2)"
 conn = connection()
 
 
 def product_menu(state):
     print(
 """
+-----------------------------------
 Select from the following options:
 [1] to return to main menu
 [2] to show products
 [3] to add new product
 [4] to update product
 [5] to delete product
+-----------------------------------
 """
     )
-    
+    state['product'] = query(conn, f"SELECT * FROM product")
     choice = int(input("\nEnter a selection\n")) - 1
+    system('clear')
     if choice == 0:
         pass
     
     elif choice == 1:
+        system('clear')
         show_products(state)
         product_menu(state)
         
+        
     elif choice == 2:
+        system('clear')
         item, price = get_new_product()
         try:
-            add_product_cache(state, item, price)
+            # add_product_cache(state, item, price)
             add_product_db(item, price, conn)
         except:
             print("Failed to add product")
+        system('clear')
         product_menu(state)
-            
+        
     elif choice == 3:
+        system('clear')
         try:
             update_product(state, select_product)
-        except:
+        except Exception as e:
             print("Failed to update product")
+        
         product_menu(state)
             
     elif choice == 4:
+        
         try:
             delete_product(state)
         except:
             print("Failed to delete product")
+        system('clear')
         product_menu(state)
 
 
 
 def show_products(state):
-    # system("clear")
-    for item in state["product"]:
-        print(f"Item: {item['name']}      \tPrice: £{item['price']}")
-    print("\n")
+    state['product'] = query(conn, f"SELECT * FROM product")
+    print(tabulate(state['product'], headers="keys", showindex=True, tablefmt="fancy_grid"))
     
 
 def get_new_product():
@@ -71,9 +80,8 @@ def add_product_db(item, price, conn):
     
 
 def select_product(state):
-    for count, item in enumerate(state["product"],1):
-        print(count,f"Item: {item['name']},   Price: {item['price']}")
-    index = int(input("type index to update "))-1
+    print(tabulate(state['product'], headers="keys", showindex=True, tablefmt="fancy_grid"))
+    index = int(input("Type index to update or enter to skip: "))
     return index
 
 def update_product(state, select_product):

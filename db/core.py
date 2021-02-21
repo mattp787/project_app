@@ -32,3 +32,9 @@ def update(conn, sql):
         cursor.execute(sql)
         conn.commit()
     # return conn.commit()
+    
+def update_values(conn, sql, values):
+    with conn.cursor() as cursor:
+        cursor.execute(sql, values)
+        conn.commit()
+    return conn.commit()
