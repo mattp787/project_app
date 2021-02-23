@@ -95,4 +95,4 @@ def save_exit(state):
     exit()
     
     
-#"python.linting.pylintPath": "venv/bin/pylint"
+

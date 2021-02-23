@@ -9,6 +9,7 @@ conn = connection()
 def orders_menu(state):
     print(
 """
+-----------------------------------
 Select from the following options:
 [1] to return to main menu
 [2] to show orders
@@ -16,6 +17,7 @@ Select from the following options:
 [4] to update order status
 [5] to update order
 [6] to delete order
+-----------------------------------
 """
     )
     state['order'] = query(conn, f"SELECT transaction_id as id, customer_name as customer, customer_address as address, customer_phone as phone, courier, product, created_on FROM transaction INNER JOIN basket ON transaction.id = basket.transaction_id;")
@@ -73,7 +75,6 @@ def update_order(state):
     print(tabulate(state['order'], headers="keys", showindex=True, tablefmt="fancy_grid"))
     idx = int(input("Select an index to update: ")) 
     order = state['order'][idx]
-    print(order)
     
     name = input("Type new name, or enter to skip: ")
     if name:
@@ -88,9 +89,9 @@ def update_order(state):
         order['phone'] = phone
         
     products = select_products(state)
-    print(products)
     
-    print(order['product'])
+    
+    
     old_product = order['product']
     print(tabulate(state['courier'], headers="keys", showindex=True, tablefmt="fancy_grid"))
     order['courier'] = state["courier"][int(input("Select an index for the courier: "))]['id']
@@ -102,7 +103,6 @@ def update_order(state):
 
     update(conn, f"DELETE FROM basket WHERE transaction_id = '{order['id']}'")
     for product in products:
-        print(product, product['id'])
         update(conn, f"INSERT INTO basket (transaction_id, product) VALUES ('{order['id']}', '{product['id']}');")
 
 def select_products(state):

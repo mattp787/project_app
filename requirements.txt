@@ -2,3 +2,4 @@ black
 pylint
 pymysql[rsa]
 python-dotenv
+tabulate

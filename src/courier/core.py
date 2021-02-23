@@ -6,12 +6,14 @@ conn = connection()
 def courier_menu(state):
     print(
 """
+-----------------------------------
 Select from the following options:
 [1] to return to main menu
 [2] to show couriers
 [3] to add new courier
 [4] to update courier
 [5] to delete courier
+-----------------------------------
 """
     )
     state["courier"] = query(conn, f"SELECT * FROM courier")

@@ -27,11 +27,13 @@ select_all_orders = "SELECT transaction_id as id, customer_name as customer, cus
 def main_menu(state):
     print(
 """
+-----------------------------------
 Select from the following options:
 [1] to save and exit
 [2] to show product menu
 [3] to show courier menu
 [4] to show order menu
+-----------------------------------
 """
     )
     
@@ -59,7 +61,7 @@ state["product"] = list(fetch_product_data(conn,select_all_products))
 state["courier"] = list(fetch_courier_data(conn,select_all_couriers))
 state["order"] = list(fetch_order_data(conn,select_all_orders))
 
-
+system('clear')
 while True:
     # print(state["product"])
     # print(state["courier"])
